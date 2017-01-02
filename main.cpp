@@ -72,29 +72,12 @@ int main()
     // Setup some OpenGL options
     glEnable(GL_DEPTH_TEST);
 
+//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
     // Setup and compile our shaders
     Shader ourShader("shader.vs", "shader.frag");
 
-    // Set up our vertex data (and buffer(s)) and attribute pointers
 	Platform platform(5.0f);
-
-    GLuint VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    // Bind our Vertex Array Object first, then bind and set our buffers and pointers.
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, platform.GetArraySize(), platform.GetVertices(), GL_STATIC_DRAW);
-
-    // Position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *)0);
-    glEnableVertexAttribArray(0);
-    // TexCoord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid *)(3*sizeof(GLfloat)));
-    glEnableVertexAttribArray(1);
-
-    glBindVertexArray(0); // Unbind VAO
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -133,12 +116,10 @@ int main()
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-
         // Bind Textures using texture units
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
-        glUniform1i(glGetUniformLocation(ourShader.Program, "ourTexture1"), 0);
+        glUniform1i(glGetUniformLocation(ourShader.Program, "ourTexture"), 0);
 
 		// Draw our first triangle
         ourShader.Use();
@@ -156,22 +137,20 @@ int main()
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-        glBindVertexArray(VAO);
+        glBindVertexArray(platform.GetVAO());
 
         glm::mat4 model;
         model = glm::translate(model, glm::vec3(0.0f, -0.7f, -1.0f));
         model = glm::rotate(model, 0.0f, glm::vec3(1.0f, 0.3f, 0.5f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-        glDrawArrays(GL_TRIANGLES, 0, platform.GetTrianglesNo());
+        glDrawArrays(GL_TRIANGLES, 0, platform.GetVerticesNo());
 
         glBindVertexArray(0);
         // Swap the buffers
         glfwSwapBuffers(window);
     }
     // Properly de-allocate all resources once they've outlived their purpose
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
     glfwTerminate();
     return 0;
 }
