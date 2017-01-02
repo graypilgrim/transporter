@@ -13,6 +13,7 @@
 #include "Camera.hpp"
 
 #include "Platform.hpp"
+#include "Gear.hpp"
 
 // GLM Mathemtics
 #include <glm/glm.hpp>
@@ -72,33 +73,13 @@ int main()
     // Setup some OpenGL options
     glEnable(GL_DEPTH_TEST);
 
-//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     // Setup and compile our shaders
     Shader ourShader("shader.vs", "shader.frag");
 
 	Platform platform(5.0f);
-
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    // Load and create a texture
-    GLuint texture1;
-    // --== TEXTURE 1 == --
-    glGenTextures(1, &texture1);
-    glBindTexture(GL_TEXTURE_2D, texture1); // All upcoming GL_TEXTURE_2D operations now have effect on our texture object
-    // Set our texture parameters
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // Set texture filtering
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    // Load, create texture and generate mipmaps
-    int width, height;
-    unsigned char* image = SOIL_load_image("ground.png", &width, &height, 0, SOIL_LOAD_RGB);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    SOIL_free_image_data(image);
-    glBindTexture(GL_TEXTURE_2D, 0); // Unbind texture when done, so we won't accidentily mess up our texture.
+	//Gear gear(4);
 
     // Game loop
     while(!glfwWindowShouldClose(window))
@@ -117,11 +98,10 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // Bind Textures using texture units
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture1);
-        glUniform1i(glGetUniformLocation(ourShader.Program, "ourTexture"), 0);
+        // glActiveTexture(GL_TEXTURE0);
+        // glBindTexture(GL_TEXTURE_2D, platform.GetTexture());
+        // glUniform1i(glGetUniformLocation(ourShader.Program, "ourTexture"), 0);
 
-		// Draw our first triangle
         ourShader.Use();
 
         // Create camera transformation
