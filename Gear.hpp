@@ -30,7 +30,6 @@ public:
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid *)0);
 		glEnableVertexAttribArray(0);
 
-
 		glBindVertexArray(0);
 	}
 
@@ -68,42 +67,42 @@ private:
 			vertices[index + 1] = 0.0f;
 			vertices[index + 2] = zValue;
 
-			vertices[index] = radius * cos(i * circleQuantum);
-			vertices[index + 1] = radius * sin(i * circleQuantum);
-			vertices[index + 2] = zValue;
+			vertices[index + 3] = radius * cos(i * circleQuantum);
+			vertices[index + 4] = radius * sin(i * circleQuantum);
+			vertices[index + 5] = zValue;
 
-			vertices[index] = radius * cos((i + 1) * circleQuantum);
-			vertices[index + 1] = radius * sin((i + 1) * circleQuantum);
-			vertices[index + 2] = zValue;
+			vertices[index + 6] = radius * cos((i + 1) * circleQuantum);
+			vertices[index + 7] = radius * sin((i + 1) * circleQuantum);
+			vertices[index + 8] = zValue;
 
-			index += 6;
+			index += 9;
 		}
 
-		zValue = 2.0f;
+		zValue = -8.0f;
 
 		for (size_t i = 0; i < segmentsNo; ++i) {
 			vertices[index] = 0.0f;
 			vertices[index + 1] = 0.0f;
 			vertices[index + 2] = zValue;
 
-			vertices[index] = radius * cos(i * circleQuantum);
-			vertices[index + 1] = radius * sin(i * circleQuantum);
-			vertices[index + 2] = zValue;
+			vertices[index + 3] = radius * cos(i * circleQuantum);
+			vertices[index + 4] = radius * sin(i * circleQuantum);
+			vertices[index + 5] = zValue;
 
-			vertices[index] = radius * cos((i + 1) * circleQuantum);
-			vertices[index + 1] = radius * sin((i + 1) * circleQuantum);
-			vertices[index + 2] = zValue;
+			vertices[index + 6] = radius * cos((i + 1) * circleQuantum);
+			vertices[index + 7] = radius * sin((i + 1) * circleQuantum);
+			vertices[index + 8] = zValue;
 
-			index += 6;
+			index += 9;
 		}
 	}
 
 	const size_t verticeCoordNo = 3;
 	const GLfloat radius = 1.0f;
-	const GLfloat circleQuantum = 2 * M_PI/segmentsNo;
 
 	const size_t segmentsNo;
 	const size_t verticesNo = 24 * segmentsNo;
+	const GLfloat circleQuantum = 2 * M_PI/segmentsNo;
 
 	GLuint VBO;
 	GLuint VAO;

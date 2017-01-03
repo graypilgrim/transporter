@@ -78,8 +78,8 @@ int main()
     // Setup and compile our shaders
     Shader ourShader("shader.vs", "shader.frag");
 
-	Platform platform(5.0f);
-	//Gear gear(4);
+	//Platform platform(5.0f);
+	Gear gear(70);
 
     // Game loop
     while(!glfwWindowShouldClose(window))
@@ -117,14 +117,14 @@ int main()
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-        glBindVertexArray(platform.GetVAO());
+        glBindVertexArray(gear.GetVAO());
 
         glm::mat4 model;
         model = glm::translate(model, glm::vec3(0.0f, -0.7f, -1.0f));
         model = glm::rotate(model, 0.0f, glm::vec3(1.0f, 0.3f, 0.5f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-        glDrawArrays(GL_TRIANGLES, 0, platform.GetVerticesNo());
+        glDrawArrays(GL_TRIANGLES, 0, gear.GetVerticesNo());
 
         glBindVertexArray(0);
         // Swap the buffers
