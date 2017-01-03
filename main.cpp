@@ -13,6 +13,7 @@
 #include "Camera.hpp"
 
 #include "Platform.hpp"
+#include "Trunk.hpp"
 #include "Gear.hpp"
 
 // GLM Mathemtics
@@ -79,7 +80,8 @@ int main()
     Shader ourShader("shader.vs", "shader.frag");
 
 	//Platform platform(5.0f);
-	Gear gear(70);
+	Gear gear(18);
+	Trunk trunk(120);
 
     // Game loop
     while(!glfwWindowShouldClose(window))
@@ -117,14 +119,19 @@ int main()
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-        glBindVertexArray(gear.GetVAO());
+		glm::mat4 model;
 
-        glm::mat4 model;
+		glBindVertexArray(trunk.GetVAO());
         model = glm::translate(model, glm::vec3(0.0f, -0.7f, -1.0f));
         model = glm::rotate(model, 0.0f, glm::vec3(1.0f, 0.3f, 0.5f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, trunk.GetVerticesNo());
 
-        glDrawArrays(GL_TRIANGLES, 0, gear.GetVerticesNo());
+		glBindVertexArray(gear.GetVAO());
+		model = glm::translate(model, glm::vec3(1.0f, 1.7f, -10.0f));
+        model = glm::rotate(model, 0.0f, glm::vec3(1.0f, 0.3f, 0.5f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, gear.GetVerticesNo());
 
         glBindVertexArray(0);
         // Swap the buffers
