@@ -39,7 +39,7 @@ GLfloat lastY  =  HEIGHT / 2.0;
 bool    keys[1024];
 
 // Light attributes
-glm::vec3 lightPos(1.2f, 1.0f, 1.0f);
+glm::vec3 lightPos(2.2f, 2.0f, 2.0f);
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -85,8 +85,8 @@ int main()
     Shader lampShader("lamp.vs", "lamp.frag");
 
 	Gear gear(6);
-	Trunk trunk(70);
-	Platform platform(1.0f);
+	//Trunk trunk(70);
+	//Platform platform(1.0f);
 	Platform lamp(1.0f);
 
     // Game loop

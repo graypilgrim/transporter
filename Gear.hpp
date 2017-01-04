@@ -15,7 +15,7 @@ public:
 
 		memset(vertices, 0, this->GetArraySize());
 		size_t index = 0;
-		GLfloat zValue = -4.0f;
+		GLfloat zValue = 2.0f;
 		CreateCircles(index, zValue);
 		CreateSides(index, zValue);
 
@@ -87,22 +87,22 @@ private:
 			vertices[index + 4] = 0.0f;
 			vertices[index + 5] = normal;
 
-			vertices[index + 6] = vertices[index + 12] = radius * cos(i * circleQuantum);
-			vertices[index + 7] = vertices[index + 13] = radius * sin(i * circleQuantum);
-			vertices[index + 8] = vertices[index + 14] = zValue;
+			vertices[index + 6] = vertices[index + 18] = radius * cos(i * circleQuantum);
+			vertices[index + 7] = vertices[index + 19] = radius * sin(i * circleQuantum);
+			vertices[index + 8] = vertices[index + 20] = zValue;
 			vertices[index + 9] = 0.0f;
 			vertices[index + 10] = 0.0f;
 			vertices[index + 11] = normal;
-			vertices[index + 15] = 0.0f;
-			vertices[index + 16] = 0.0f;
-			vertices[index + 17] = normal;
-
-			vertices[index + 18] = vertices[index + 24] = radius * cos((i + 1) * circleQuantum);
-			vertices[index + 19] = vertices[index + 25] = radius * sin((i + 1) * circleQuantum);
-			vertices[index + 20] = vertices[index + 26] = zValue;
 			vertices[index + 21] = 0.0f;
 			vertices[index + 22] = 0.0f;
 			vertices[index + 23] = normal;
+
+			vertices[index + 12] = vertices[index + 24] = radius * cos((i + 1) * circleQuantum);
+			vertices[index + 13] = vertices[index + 25] = radius * sin((i + 1) * circleQuantum);
+			vertices[index + 14] = vertices[index + 26] = zValue;
+			vertices[index + 15] = 0.0f;
+			vertices[index + 16] = 0.0f;
+			vertices[index + 17] = normal;
 			vertices[index + 27] = 0.0f;
 			vertices[index + 28] = 0.0f;
 			vertices[index + 29] = normal;
