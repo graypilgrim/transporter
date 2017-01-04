@@ -15,7 +15,7 @@ public:
 
 		memset(vertices, 0, this->GetArraySize());
 		size_t index = 0;
-		GLfloat zValue = 2.0f;
+		GLfloat zValue = 0.5f;
 		CreateCircles(index, zValue);
 		CreateSides(index, zValue);
 
@@ -229,7 +229,7 @@ private:
 	}
 
 	const size_t verticeCoordNo = 6;
-	const GLfloat radius = 1.0f;
+	const GLfloat radius = 0.5f;
 
 	const size_t segmentsNo;
 	const size_t verticesNo = 24 * segmentsNo;

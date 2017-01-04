@@ -33,13 +33,13 @@ void do_movement();
 const GLuint WIDTH = 800, HEIGHT = 600;
 
 // Camera
-Camera  camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera  camera(glm::vec3(0.0f, 0.0f, 8.0f));
 GLfloat lastX  =  WIDTH  / 2.0;
 GLfloat lastY  =  HEIGHT / 2.0;
 bool    keys[1024];
 
 // Light attributes
-glm::vec3 lightPos(2.2f, 2.0f, 2.0f);
+glm::vec3 lightPos(0.0f, 0.0f, 2.0f);
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -84,10 +84,10 @@ int main()
     Shader lightingShader("lighting.vs", "lighting.frag");
     Shader lampShader("lamp.vs", "lamp.frag");
 
-	Gear gear(6);
+	Gear gear(9);
 	//Trunk trunk(70);
 	//Platform platform(1.0f);
-	Platform lamp(1.0f);
+	Platform lamp(0.1f);
 
     // Game loop
     while (!glfwWindowShouldClose(window))
@@ -111,7 +111,7 @@ int main()
         GLint lightColorLoc  = glGetUniformLocation(lightingShader.Program, "lightColor");
         GLint lightPosLoc    = glGetUniformLocation(lightingShader.Program, "lightPos");
         GLint viewPosLoc     = glGetUniformLocation(lightingShader.Program, "viewPos");
-        glUniform3f(objectColorLoc, 1.0f, 0.0f, 0.0f);
+        glUniform3f(objectColorLoc, 0.2f, 0.3f, 0.1f);
         glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f);
         glUniform3f(lightPosLoc,    lightPos.x, lightPos.y, lightPos.z);
         glUniform3f(viewPosLoc,     camera.Position.x, camera.Position.y, camera.Position.z);
