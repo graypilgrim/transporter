@@ -18,10 +18,9 @@
 // Other includes
 #include "Shader.hpp"
 #include "Camera.hpp"
-#include "Platform.hpp"
+#include "Box.hpp"
 #include "Trunk.hpp"
 #include "Gear.hpp"
-
 
 // Function prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -39,7 +38,7 @@ GLfloat lastY  =  HEIGHT / 2.0;
 bool    keys[1024];
 
 // Light attributes
-glm::vec3 lightPos(0.0f, 0.0f, 2.0f);
+glm::vec3 lightPos(0.0f, 0.0f, 1.0f);
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -84,10 +83,13 @@ int main()
     Shader lightingShader("lighting.vs", "lighting.frag");
     Shader lampShader("lamp.vs", "lamp.frag");
 
-	Gear gear(9);
+	Gear leftGear(9);
+	Gear rightGear(9);
 	//Trunk trunk(70);
 	//Platform platform(1.0f);
-	Platform lamp(0.1f);
+	Box lamp(1.1f, 1.1f, 1.1f);
+	Box box1(1.0f, 1.0f, 1.0f);
+	Box box2(1.0f, 1.0f, 1.0f);
 
     // Game loop
     while (!glfwWindowShouldClose(window))
@@ -111,14 +113,12 @@ int main()
         GLint lightColorLoc  = glGetUniformLocation(lightingShader.Program, "lightColor");
         GLint lightPosLoc    = glGetUniformLocation(lightingShader.Program, "lightPos");
         GLint viewPosLoc     = glGetUniformLocation(lightingShader.Program, "viewPos");
-        glUniform3f(objectColorLoc, 0.2f, 0.3f, 0.1f);
         glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f);
         glUniform3f(lightPosLoc,    lightPos.x, lightPos.y, lightPos.z);
         glUniform3f(viewPosLoc,     camera.Position.x, camera.Position.y, camera.Position.z);
 
-
-
         // Create camera transformations
+		glm::mat4 model;
         glm::mat4 view;
         view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(camera.Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
@@ -130,12 +130,20 @@ int main()
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-        // Draw the container (using container's vertex attributes)
-        glBindVertexArray(gear.GetVAO());
-        glm::mat4 model;
+        glUniform3f(objectColorLoc, 0.0f, 0.3f, 0.1f);
+        glBindVertexArray(box1.GetVAO());
+		model = glm::translate(model, glm::vec3(0.0f, -0.7f, -1.0f));
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glDrawArrays(GL_TRIANGLES, 0, gear.GetVerticesNo());
+        glDrawArrays(GL_TRIANGLES, 0, box1.GetVerticesNo());
         glBindVertexArray(0);
+
+		glUniform3f(objectColorLoc, 1.0f, 0.3f, 0.1f);
+		glBindVertexArray(box2.GetVAO());
+		model = glm::translate(model, glm::vec3(2.0f, -0.7f, -1.0f));
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, box2.GetVerticesNo());
+        glBindVertexArray(0);
+
 
         // Also draw the lamp object, again binding the appropriate shader
         lampShader.Use();
