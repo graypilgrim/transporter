@@ -15,7 +15,7 @@ public:
 
 		memset(vertices, 0, this->GetArraySize());
 		size_t index = 0;
-		GLfloat zValue = -2.0f;
+		GLfloat zValue = 2.0f;
 		CreateCircles(index, zValue);
 		CreateSides(index, zValue);
 
@@ -29,8 +29,12 @@ public:
 		glBufferData(GL_ARRAY_BUFFER, this->GetArraySize(), this->GetVertices(), GL_STATIC_DRAW);
 
 		// Position attribute
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid *)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
 		glEnableVertexAttribArray(0);
+
+		// Normal attribute
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+		glEnableVertexAttribArray(1);
 
 		glBindVertexArray(0);
 
@@ -72,20 +76,31 @@ private:
 	}
 
 	void CreateCircle(size_t &index, GLfloat zValue) {
+		GLfloat normal = zValue == 0.0f ? -1.0f : 1.0f;
+
 		for (size_t i = 0; i < segmentsNo; ++i) {
 			vertices[index] = 0.0f;
 			vertices[index + 1] = 0.0f;
 			vertices[index + 2] = zValue;
+			vertices[index + 3] = 0.0f;
+			vertices[index + 4] = 0.0f;
+			vertices[index + 5] = normal;
 
-			vertices[index + 3] = radius * cos(i * circleQuantum);
-			vertices[index + 4] = radius * sin(i * circleQuantum);
-			vertices[index + 5] = zValue;
-
-			vertices[index + 6] = radius * cos((i + 1) * circleQuantum);
-			vertices[index + 7] = radius * sin((i + 1) * circleQuantum);
+			vertices[index + 6] = radius * cos(i * circleQuantum);
+			vertices[index + 7] = radius * sin(i * circleQuantum);
 			vertices[index + 8] = zValue;
+			vertices[index + 9] = 0.0f;
+			vertices[index + 10] = 0.0f;
+			vertices[index + 11] = normal;
 
-			index += 9;
+			vertices[index + 12] = radius * cos((i + 1) * circleQuantum);
+			vertices[index + 13] = radius * sin((i + 1) * circleQuantum);
+			vertices[index + 14] = zValue;
+			vertices[index + 15] = 0.0f;
+			vertices[index + 16] = 0.0f;
+			vertices[index + 17] = normal;
+
+			index += 18;
 		}
 	}
 
@@ -94,34 +109,52 @@ private:
 			vertices[index] = radius * cos(i * circleQuantum);
 			vertices[index + 1] = radius * sin(i * circleQuantum);
 			vertices[index + 2] = 0.0f;
+			vertices[index + 3] = cos(i * circleQuantum);
+			vertices[index + 4] = sin(i * circleQuantum);
+			vertices[index + 5] = 0.0f;
 
-			vertices[index + 3] = radius * cos(i * circleQuantum);
-			vertices[index + 4] = radius * sin(i * circleQuantum);
-			vertices[index + 5] = zValue;
-
-			vertices[index + 6] = radius * cos((i + 1) * circleQuantum);
-			vertices[index + 7] = radius * sin((i + 1) * circleQuantum);
+			vertices[index + 6] = radius * cos(i * circleQuantum);
+			vertices[index + 7] = radius * sin(i * circleQuantum);
 			vertices[index + 8] = zValue;
-
-			vertices[index + 9] = radius * cos(i * circleQuantum);
-			vertices[index + 10] = radius * sin(i * circleQuantum);
+			vertices[index + 9] = cos(i * circleQuantum);
+			vertices[index + 10] = sin(i * circleQuantum);
 			vertices[index + 11] = 0.0f;
 
 			vertices[index + 12] = radius * cos((i + 1) * circleQuantum);
 			vertices[index + 13] = radius * sin((i + 1) * circleQuantum);
-			vertices[index + 14] = 0.0f;
+			vertices[index + 14] = zValue;
+			vertices[index + 15] = cos((i + 1) * circleQuantum);
+			vertices[index + 16] = sin((i + 1) * circleQuantum);
+			vertices[index + 17] = 0.0f;
 
-			vertices[index + 15] = radius * cos((i + 1) * circleQuantum);
-			vertices[index + 16] = radius * sin((i + 1) * circleQuantum);
-			vertices[index + 17] = zValue;
+			vertices[index + 18] = radius * cos(i * circleQuantum);
+			vertices[index + 19] = radius * sin(i * circleQuantum);
+			vertices[index + 20] = 0.0f;
+			vertices[index + 21] = cos(i * circleQuantum);
+			vertices[index + 22] = sin(i * circleQuantum);
+			vertices[index + 23] = 0.0f;
 
-			index += 18;
+			vertices[index + 24] = radius * cos((i + 1) * circleQuantum);
+			vertices[index + 25] = radius * sin((i + 1) * circleQuantum);
+			vertices[index + 26] = 0.0f;
+			vertices[index + 27] = cos((i + 1) * circleQuantum);
+			vertices[index + 28] = sin((i + 1) * circleQuantum);
+			vertices[index + 29] = 0.0f;
+
+			vertices[index + 30] = radius * cos((i + 1) * circleQuantum);
+			vertices[index + 31] = radius * sin((i + 1) * circleQuantum);
+			vertices[index + 32] = zValue;
+			vertices[index + 33] = cos((i + 1) * circleQuantum);
+			vertices[index + 34] = sin((i + 1) * circleQuantum);
+			vertices[index + 35] = 0.0f;
+
+			index += 36;
 		}
 
 		std::cout << "sides created" << std::endl;
 	}
 
-	const size_t verticeCoordNo = 3;
+	const size_t verticeCoordNo = 6;
 	const GLfloat radius = 1.0f;
 
 	const size_t segmentsNo;

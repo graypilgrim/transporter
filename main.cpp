@@ -19,6 +19,8 @@
 #include "Shader.hpp"
 #include "Camera.hpp"
 #include "Platform.hpp"
+#include "Trunk.hpp"
+#include "Gear.hpp"
 
 
 // Function prototypes
@@ -82,6 +84,8 @@ int main()
     Shader lightingShader("lighting.vs", "lighting.frag");
     Shader lampShader("lamp.vs", "lamp.frag");
 
+	Gear gear(6);
+	Trunk trunk(70);
 	Platform platform(1.0f);
 	Platform lamp(1.0f);
 
@@ -127,10 +131,10 @@ int main()
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
         // Draw the container (using container's vertex attributes)
-        glBindVertexArray(platform.GetVAO());
+        glBindVertexArray(gear.GetVAO());
         glm::mat4 model;
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glDrawArrays(GL_TRIANGLES, 0, platform.GetVerticesNo());
+        glDrawArrays(GL_TRIANGLES, 0, gear.GetVerticesNo());
         glBindVertexArray(0);
 
         // Also draw the lamp object, again binding the appropriate shader
