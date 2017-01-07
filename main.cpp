@@ -20,6 +20,8 @@
 #include "Camera.hpp"
 #include "Box.hpp"
 #include "Skybox.hpp"
+#include "Trunk.hpp"
+#include "Gear.hpp"
 
 // Function prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -86,6 +88,10 @@ int main()
 	Box lamp(0.5f, 0.5f, 0.5f);
 	Skybox skybox;
 
+	Trunk trunk(30);
+
+	Gear gear(30);
+
     // Game loop
     while (!glfwWindowShouldClose(window))
     {
@@ -113,7 +119,7 @@ int main()
         // Set lights properties
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"),  0.2f, 0.2f, 0.2f);
         glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"),  0.5f, 0.5f, 0.5f);
-        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 1.0f, 1.0f, 1.0f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 0.0f, 0.0f, 0.0f);
         // Set material properties
         glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"),  0.5f, 0.5f, 0.5f);
         glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 64.0f);
@@ -132,13 +138,13 @@ int main()
 
         // Bind diffuse map
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, box.GetTexture());
+        glBindTexture(GL_TEXTURE_2D, trunk.GetTexture());
 
         // Draw the container (using container's vertex attributes)
-        glBindVertexArray(box.GetVAO());
+        glBindVertexArray(trunk.GetVAO());
         glm::mat4 model;
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glDrawArrays(GL_TRIANGLES, 0, box.GetVerticesNo());
+        glDrawArrays(GL_TRIANGLES, 0, trunk.GetVerticesNo());
         glBindVertexArray(0);
 
         // Also draw the lamp object, again binding the appropriate shader

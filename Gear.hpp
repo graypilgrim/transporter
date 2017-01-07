@@ -6,11 +6,13 @@
 #include <cmath>
 #include <iostream>
 
-class Gear
+#include "Object.hpp"
+
+class Gear : public Object
 {
 public:
 	Gear(size_t segments)
-	:segmentsNo(segments) {
+	:Object(24 * segments, 6), segmentsNo(segments) {
 		vertices = new GLfloat[verticesNo * verticeCoordNo];
 
 		memset(vertices, 0, this->GetArraySize());
@@ -19,48 +21,11 @@ public:
 		CreateCircles(index, zValue);
 		CreateSides(index, zValue);
 
-		glGenVertexArrays(1, &VAO);
-		glGenBuffers(1, &VBO);
-
-		// Bind our Vertex Array Object first, then bind and set our buffers and pointers.
-		glBindVertexArray(VAO);
-
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, this->GetArraySize(), this->GetVertices(), GL_STATIC_DRAW);
-
-		// Position attribute
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
-		glEnableVertexAttribArray(0);
-
-		// Normal attribute
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-		glEnableVertexAttribArray(1);
-
-		glBindVertexArray(0);
+		BindVertices();
 	}
 
 	~Gear() {
 		delete[] vertices;
-	}
-
-	GLfloat *GetVertices() {
-		return vertices;
-	}
-
-	size_t GetVerticesNo() {
-		return verticesNo;
-	}
-
-	size_t GetArraySize() {
-		return sizeof(GLfloat) * verticesNo * verticeCoordNo;
-	}
-
-	GLuint GetVAO() {
-		return VAO;
-	}
-
-	GLuint GetVBO() {
-		return VBO;
 	}
 
 private:
@@ -228,17 +193,10 @@ private:
 		}
 	}
 
-	const size_t verticeCoordNo = 6;
 	const GLfloat radius = 0.5f;
 
 	const size_t segmentsNo;
-	const size_t verticesNo = 24 * segmentsNo;
 	const GLfloat circleQuantum = 2 * M_PI/segmentsNo;
-
-	GLuint VBO;
-	GLuint VAO;
-
-	GLfloat *vertices;
 };
 
 #endif

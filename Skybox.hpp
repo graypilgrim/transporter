@@ -58,13 +58,12 @@ public:
 
 		memcpy(vertices, skyboxVertices, GetArraySize());
 
-	    faces.push_back("skybox_anton/right.jpg");
-	    faces.push_back("skybox_anton/left.jpg");
-	    faces.push_back("skybox_anton/top.jpg");
-	    faces.push_back("skybox_anton/down.jpg");
-	    faces.push_back("skybox_anton/back.jpg");
-	    faces.push_back("skybox_anton/front.jpg");
-
+	    faces.push_back("skybox/right.jpg");
+	    faces.push_back("skybox/left.jpg");
+	    faces.push_back("skybox/top.jpg");
+	    faces.push_back("skybox/bottom.jpg");
+	    faces.push_back("skybox/back.jpg");
+	    faces.push_back("skybox/front.jpg");
 
 		BindVertices();
 	    loadCubemap();
