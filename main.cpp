@@ -19,8 +19,6 @@
 #include "Shader.hpp"
 #include "Camera.hpp"
 #include "Box.hpp"
-#include "Trunk.hpp"
-#include "Gear.hpp"
 
 // Function prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -32,13 +30,13 @@ void do_movement();
 const GLuint WIDTH = 800, HEIGHT = 600;
 
 // Camera
-Camera  camera(glm::vec3(0.0f, 0.0f, 8.0f));
+Camera  camera(glm::vec3(0.0f, 0.0f, 3.0f));
 GLfloat lastX  =  WIDTH  / 2.0;
 GLfloat lastY  =  HEIGHT / 2.0;
 bool    keys[1024];
 
 // Light attributes
-glm::vec3 lightPos(0.0f, 0.0f, 1.0f);
+glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
@@ -83,13 +81,9 @@ int main()
     Shader lightingShader("lighting.vs", "lighting.frag");
     Shader lampShader("lamp.vs", "lamp.frag");
 
-	Gear leftGear(9);
-	Gear rightGear(9);
-	//Trunk trunk(70);
-	//Platform platform(1.0f);
-	Box lamp(1.1f, 1.1f, 1.1f);
-	Box box1(1.0f, 1.0f, 1.0f);
-	Box box2(1.0f, 1.0f, 1.0f);
+	Box box(1.0f, 1.0f, 1.0f);
+	Box lamp(0.5f, 0.5f, 0.5f);
+
 
     // Game loop
     while (!glfwWindowShouldClose(window))
@@ -107,18 +101,23 @@ int main()
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+
         // Use cooresponding shader when setting uniforms/drawing objects
         lightingShader.Use();
-        GLint objectColorLoc = glGetUniformLocation(lightingShader.Program, "objectColor");
-        GLint lightColorLoc  = glGetUniformLocation(lightingShader.Program, "lightColor");
-        GLint lightPosLoc    = glGetUniformLocation(lightingShader.Program, "lightPos");
+	    glUniform1i(glGetUniformLocation(lightingShader.Program, "material.diffuse"), 0);
+        GLint lightPosLoc    = glGetUniformLocation(lightingShader.Program, "light.position");
         GLint viewPosLoc     = glGetUniformLocation(lightingShader.Program, "viewPos");
-        glUniform3f(lightColorLoc,  1.0f, 1.0f, 1.0f);
         glUniform3f(lightPosLoc,    lightPos.x, lightPos.y, lightPos.z);
         glUniform3f(viewPosLoc,     camera.Position.x, camera.Position.y, camera.Position.z);
+        // Set lights properties
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.ambient"),  0.2f, 0.2f, 0.2f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.diffuse"),  0.5f, 0.5f, 0.5f);
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "light.specular"), 1.0f, 1.0f, 1.0f);
+        // Set material properties
+        glUniform3f(glGetUniformLocation(lightingShader.Program, "material.specular"),  0.5f, 0.5f, 0.5f);
+        glUniform1f(glGetUniformLocation(lightingShader.Program, "material.shininess"), 64.0f);
 
         // Create camera transformations
-		glm::mat4 model;
         glm::mat4 view;
         view = camera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(camera.Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
@@ -130,20 +129,16 @@ int main()
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-        glUniform3f(objectColorLoc, 0.0f, 0.3f, 0.1f);
-        glBindVertexArray(box1.GetVAO());
-		model = glm::translate(model, glm::vec3(0.0f, -0.7f, -1.0f));
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glDrawArrays(GL_TRIANGLES, 0, box1.GetVerticesNo());
-        glBindVertexArray(0);
+        // Bind diffuse map
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, box.GetTexture());
 
-		glUniform3f(objectColorLoc, 1.0f, 0.3f, 0.1f);
-		glBindVertexArray(box2.GetVAO());
-		model = glm::translate(model, glm::vec3(2.0f, -0.7f, -1.0f));
+        // Draw the container (using container's vertex attributes)
+        glBindVertexArray(box.GetVAO());
+        glm::mat4 model;
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-        glDrawArrays(GL_TRIANGLES, 0, box2.GetVerticesNo());
+        glDrawArrays(GL_TRIANGLES, 0, box.GetVerticesNo());
         glBindVertexArray(0);
-
 
         // Also draw the lamp object, again binding the appropriate shader
         lampShader.Use();
@@ -156,7 +151,7 @@ int main()
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
         model = glm::mat4();
         model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
+        model = glm::scale(model, glm::vec3(0.1f)); // Make it a smaller cube
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         // Draw the light object (using light's vertex attributes)
         glBindVertexArray(lamp.GetVAO());

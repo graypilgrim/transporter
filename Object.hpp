@@ -33,6 +33,10 @@ public:
 		return VBO;
 	}
 
+	GLuint GetTexture() {
+		return texture;
+	}
+
 protected:
 	void BindVertices() {
 		glGenVertexArrays(1, &VAO);
