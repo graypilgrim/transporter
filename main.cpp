@@ -19,6 +19,7 @@
 #include "Shader.hpp"
 #include "Camera.hpp"
 #include "Box.hpp"
+#include "Skybox.hpp"
 
 // Function prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -42,7 +43,6 @@ glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
 
-// The MAIN function, from here we start the application and run the game loop
 int main()
 {
     // Init GLFW
@@ -80,10 +80,11 @@ int main()
     // Build and compile our shader program
     Shader lightingShader("lighting.vs", "lighting.frag");
     Shader lampShader("lamp.vs", "lamp.frag");
+	Shader skyboxShader("skybox.vs", "skybox.frag");
 
 	Box box(1.0f, 1.0f, 1.0f);
 	Box lamp(0.5f, 0.5f, 0.5f);
-
+	Skybox skybox;
 
     // Game loop
     while (!glfwWindowShouldClose(window))
@@ -157,6 +158,19 @@ int main()
         glBindVertexArray(lamp.GetVAO());
         glDrawArrays(GL_TRIANGLES, 0, lamp.GetVerticesNo());
         glBindVertexArray(0);
+
+		glDepthFunc(GL_LEQUAL);  // Change depth function so depth test passes when values are equal to depth buffer's content
+        skyboxShader.Use();
+        view = glm::mat4(glm::mat3(camera.GetViewMatrix()));	// Remove any translation component of the view matrix
+        glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+        // skybox cube
+        glBindVertexArray(skybox.GetVAO());
+        glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.GetTexture());
+        glDrawArrays(GL_TRIANGLES, 0, skybox.GetVerticesNo());
+        glBindVertexArray(0);
+        glDepthFunc(GL_LESS); // Set depth function back to default
 
         // Swap the screen buffers
         glfwSwapBuffers(window);
