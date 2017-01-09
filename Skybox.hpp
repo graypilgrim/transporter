@@ -66,11 +66,11 @@ public:
 	    faces.push_back("skybox/front.jpg");
 
 		BindVertices();
-	    loadCubemap();
+	    LoadCubemap();
 	}
 
 private:
-	void loadCubemap()
+	void LoadCubemap()
 	{
 		glActiveTexture(GL_TEXTURE0);
 	    glGenTextures(1, &texture);

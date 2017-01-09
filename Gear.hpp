@@ -7,6 +7,8 @@
 #include <iostream>
 
 #include "Object.hpp"
+#include "Shader.hpp"
+#include "Camera.hpp"
 
 class Gear : public Object
 {
@@ -26,6 +28,29 @@ public:
 
 	~Gear() {
 		delete[] vertices;
+	}
+
+	void Draw(Camera &camera, glm::vec3 &lightPos) {
+		Shader lightingShader("shaders/lighting.vs", "shaders/lighting.frag");
+
+		lightingShader.Use();
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "objectColor"), 1.0f, 0.5f, 0.31f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "lightColor"),  1.0f, 1.0f, 1.0f);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+		glUniform3f(glGetUniformLocation(lightingShader.Program, "viewPos"), camera.Position.x, camera.Position.y, camera.Position.z);
+
+		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 projection = glm::perspective(camera.Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
+		// Pass the matrices to the shader
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program,  "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program,  "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+		// Draw the container (using container's vertex attributes)
+		glBindVertexArray(GetVAO());
+		glm::mat4 model;
+		glUniformMatrix4fv(glGetUniformLocation(lightingShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, GetVerticesNo());
+		glBindVertexArray(0);
 	}
 
 private:

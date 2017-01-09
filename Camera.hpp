@@ -1,3 +1,5 @@
+#ifndef CAMERA_HPP_
+#define CAMERA_HPP_
 // Std. Includes
 #include <vector>
 
@@ -5,6 +7,9 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+// Window dimensions
+const GLuint WIDTH = 1024, HEIGHT = 768;
 
 
 
@@ -129,3 +134,5 @@ private:
         this->Up    = glm::normalize(glm::cross(this->Right, this->Front));
     }
 };
+
+#endif
