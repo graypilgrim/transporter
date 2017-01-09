@@ -32,7 +32,7 @@ void do_movement();
 
 
 // Camera
-Camera  camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera  camera(glm::vec3(0.0f, 0.5f, 6.0f));
 GLfloat lastX  =  WIDTH  / 2.0;
 GLfloat lastY  =  HEIGHT / 2.0;
 bool	keys[1024];
@@ -40,13 +40,6 @@ bool	keys[1024];
 // Deltatime
 GLfloat deltaTime = 0.0f;	// Time between current frame and last frame
 GLfloat lastFrame = 0.0f;  	// Time of last frame
-
-struct CameraData
-{
-	GLint modelLoc;
-	GLint viewLoc;
-	GLint projLoc;
-};
 
 int main()
 {
@@ -81,7 +74,7 @@ int main()
 	// OpenGL options
 	glEnable(GL_DEPTH_TEST);
 
-	glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+	glm::vec3 lightPos(-5.2f, 5.0f, -5.0f);
 
 
 	// Build and compile our shader program
@@ -90,8 +83,13 @@ int main()
 	Shader lampShader("shaders/lamp.vs", "shaders/lamp.frag");
 	Shader skyboxShader("shaders/skybox.vs", "shaders/skybox.frag");
 
-	Box platform(10.0f, 10.0f, 10.0f);
-	platform.SetTexture("textures/ground.png");
+	Box island(20.0f, 0.05f, 20.0f);
+	island.SetTexture("textures/grass-pattern.png");
+	island.SetShader(&lightingWithTexShader);
+	island.SetCamera(&camera);
+
+	Box platform(3.0f, 0.4f, 5.0f);
+	platform.SetTexture("textures/stone.png");
 	platform.SetShader(&lightingWithTexShader);
 	platform.SetCamera(&camera);
 
@@ -104,11 +102,16 @@ int main()
 	skybox.SetShader(&skyboxShader);
 
 	Trunk trunk(30);
+	trunk.SetCamera(&camera);
+	trunk.SetShader(&lightingWithTexShader);
 
 	Gear leftGear(17);
-	Gear rightGear(17);
+	leftGear.SetCamera(&camera);
+	leftGear.SetShader(&lightingShader);
 
-	CameraData cameraData;
+	Gear rightGear(17);
+	rightGear.SetCamera(&camera);
+	rightGear.SetShader(&lightingShader);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -122,31 +125,28 @@ int main()
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		lightingShader.Use();
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "objectColor"), 1.0f, 0.5f, 0.31f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "lightColor"),  1.0f, 1.0f, 1.0f);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-		glUniform3f(glGetUniformLocation(lightingShader.Program, "viewPos"), camera.Position.x, camera.Position.y, camera.Position.z);
-
-		glm::mat4 view;
-		view = camera.GetViewMatrix();
-		glm::mat4 projection = glm::perspective(camera.Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
-		// Get the uniform locations
-		cameraData.modelLoc = glGetUniformLocation(lightingShader.Program, "model");
-		cameraData.viewLoc  = glGetUniformLocation(lightingShader.Program,  "view");
-		cameraData.projLoc  = glGetUniformLocation(lightingShader.Program,  "projection");
-		// Pass the matrices to the shader
-		glUniformMatrix4fv(cameraData.viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(cameraData.projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-		// Draw the container (using container's vertex attributes)
-		glBindVertexArray(leftGear.GetVAO());
 		glm::mat4 model;
-		glUniformMatrix4fv(cameraData.modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, leftGear.GetVerticesNo());
-		glBindVertexArray(0);
 
+		island.Draw(lightPos, model);
+
+		model = glm::translate(model, glm::vec3(0.0f, 0.2f, 0.0f));
 		platform.Draw(lightPos, model);
+
+		glm::mat4 leftGearModel = glm::mat4();
+		glm::mat4 rightGearModel = glm::mat4();
+
+		leftGearModel = glm::translate(leftGearModel, glm::vec3(-0.4f, 0.4f, 0.0f));
+		rightGearModel = glm::translate(rightGearModel, glm::vec3(0.4f, 0.4f, 0.0f));
+
+		leftGearModel = glm::rotate(leftGearModel, -3.14f/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		rightGearModel = glm::rotate(rightGearModel, -3.14f/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+		leftGear.Draw(lightPos, leftGearModel);
+		rightGear.Draw(lightPos, rightGearModel);
+
+		model = glm::mat4();
+		model = glm::translate(model, glm::vec3(0.0f, 0.5f, 0.0f));
+		trunk.Draw(lightPos, model);
 
 		model = glm::mat4();
 		lamp.Draw(lightPos, model);

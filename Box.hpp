@@ -14,46 +14,46 @@ public:
 	:Object(36, 8) {
 		GLfloat tempVertices[] = {
 	        -0.5f * width, -0.5f * height, -0.5f * depth,	0.0f,  0.0f, -1.0f,		0.0f, 0.0f,
-	         0.5f * width, -0.5f * height, -0.5f * depth,	0.0f,  0.0f, -1.0f,		1.0f, 0.0f,
-	         0.5f * width,  0.5f * height, -0.5f * depth,	0.0f,  0.0f, -1.0f,		1.0f, 1.0f,
-	         0.5f * width,  0.5f * height, -0.5f * depth,	0.0f,  0.0f, -1.0f,		1.0f, 1.0f,
-	        -0.5f * width,  0.5f * height, -0.5f * depth,	0.0f,  0.0f, -1.0f,		0.0f, 1.0f,
+	         0.5f * width, -0.5f * height, -0.5f * depth,	0.0f,  0.0f, -1.0f,		8.0f, 0.0f,
+	         0.5f * width,  0.5f * height, -0.5f * depth,	0.0f,  0.0f, -1.0f,		8.0f, 8.0f,
+	         0.5f * width,  0.5f * height, -0.5f * depth,	0.0f,  0.0f, -1.0f,		8.0f, 8.0f,
+	        -0.5f * width,  0.5f * height, -0.5f * depth,	0.0f,  0.0f, -1.0f,		0.0f, 8.0f,
 	        -0.5f * width, -0.5f * height, -0.5f * depth,	0.0f,  0.0f, -1.0f,		0.0f, 0.0f,
 
 	        -0.5f * width, -0.5f * height,  0.5f * depth,	0.0f,  0.0f,  1.0f,		0.0f, 0.0f,
-	         0.5f * width, -0.5f * height,  0.5f * depth,	0.0f,  0.0f,  1.0f,		1.0f, 0.0f,
-	         0.5f * width,  0.5f * height,  0.5f * depth,	0.0f,  0.0f,  1.0f,		1.0f, 1.0f,
-	         0.5f * width,  0.5f * height,  0.5f * depth,	0.0f,  0.0f,  1.0f,		1.0f, 1.0f,
-	        -0.5f * width,  0.5f * height,  0.5f * depth,	0.0f,  0.0f,  1.0f,		0.0f, 1.0f,
+	         0.5f * width, -0.5f * height,  0.5f * depth,	0.0f,  0.0f,  1.0f,		8.0f, 0.0f,
+	         0.5f * width,  0.5f * height,  0.5f * depth,	0.0f,  0.0f,  1.0f,		8.0f, 8.0f,
+	         0.5f * width,  0.5f * height,  0.5f * depth,	0.0f,  0.0f,  1.0f,		8.0f, 8.0f,
+	        -0.5f * width,  0.5f * height,  0.5f * depth,	0.0f,  0.0f,  1.0f,		0.0f, 8.0f,
 	        -0.5f * width, -0.5f * height,  0.5f * depth,	0.0f,  0.0f,  1.0f,		0.0f, 0.0f,
 
-	        -0.5f * width,  0.5f * height,  0.5f * depth,	-1.0f,  0.0f,  0.0f,	1.0f, 0.0f,
-	        -0.5f * width,  0.5f * height, -0.5f * depth,	-1.0f,  0.0f,  0.0f,	1.0f, 1.0f,
-	        -0.5f * width, -0.5f * height, -0.5f * depth,	-1.0f,  0.0f,  0.0f,	0.0f, 1.0f,
-	        -0.5f * width, -0.5f * height, -0.5f * depth,	-1.0f,  0.0f,  0.0f,	0.0f, 1.0f,
+	        -0.5f * width,  0.5f * height,  0.5f * depth,	-1.0f,  0.0f,  0.0f,	8.0f, 0.0f,
+	        -0.5f * width,  0.5f * height, -0.5f * depth,	-1.0f,  0.0f,  0.0f,	8.0f, 8.0f,
+	        -0.5f * width, -0.5f * height, -0.5f * depth,	-1.0f,  0.0f,  0.0f,	0.0f, 8.0f,
+	        -0.5f * width, -0.5f * height, -0.5f * depth,	-1.0f,  0.0f,  0.0f,	0.0f, 8.0f,
 	        -0.5f * width, -0.5f * height,  0.5f * depth,	-1.0f,  0.0f,  0.0f,	0.0f, 0.0f,
-	        -0.5f * width,  0.5f * height,  0.5f * depth,	-1.0f,  0.0f,  0.0f,	1.0f, 0.0f,
+	        -0.5f * width,  0.5f * height,  0.5f * depth,	-1.0f,  0.0f,  0.0f,	8.0f, 0.0f,
 
-	         0.5f * width,  0.5f * height,  0.5f * depth,	1.0f,  0.0f,  0.0f,		1.0f, 0.0f,
-	         0.5f * width,  0.5f * height, -0.5f * depth,	1.0f,  0.0f,  0.0f,		1.0f, 1.0f,
-	         0.5f * width, -0.5f * height, -0.5f * depth,	1.0f,  0.0f,  0.0f,		0.0f, 1.0f,
-	         0.5f * width, -0.5f * height, -0.5f * depth,	1.0f,  0.0f,  0.0f,		0.0f, 1.0f,
+	         0.5f * width,  0.5f * height,  0.5f * depth,	1.0f,  0.0f,  0.0f,		8.0f, 0.0f,
+	         0.5f * width,  0.5f * height, -0.5f * depth,	1.0f,  0.0f,  0.0f,		8.0f, 8.0f,
+	         0.5f * width, -0.5f * height, -0.5f * depth,	1.0f,  0.0f,  0.0f,		0.0f, 8.0f,
+	         0.5f * width, -0.5f * height, -0.5f * depth,	1.0f,  0.0f,  0.0f,		0.0f, 8.0f,
 	         0.5f * width, -0.5f * height,  0.5f * depth,	1.0f,  0.0f,  0.0f,		0.0f, 0.0f,
-	         0.5f * width,  0.5f * height,  0.5f * depth,	1.0f,  0.0f,  0.0f,		1.0f, 0.0f,
+	         0.5f * width,  0.5f * height,  0.5f * depth,	1.0f,  0.0f,  0.0f,		8.0f, 0.0f,
 
-	        -0.5f * width, -0.5f * height, -0.5f * depth,	0.0f, -1.0f,  0.0f,		0.0f, 1.0f,
-	         0.5f * width, -0.5f * height, -0.5f * depth,	0.0f, -1.0f,  0.0f,		1.0f, 1.0f,
-	         0.5f * width, -0.5f * height,  0.5f * depth,	0.0f, -1.0f,  0.0f,		1.0f, 0.0f,
-	         0.5f * width, -0.5f * height,  0.5f * depth,	0.0f, -1.0f,  0.0f,		1.0f, 0.0f,
+	        -0.5f * width, -0.5f * height, -0.5f * depth,	0.0f, -1.0f,  0.0f,		0.0f, 8.0f,
+	         0.5f * width, -0.5f * height, -0.5f * depth,	0.0f, -1.0f,  0.0f,		8.0f, 8.0f,
+	         0.5f * width, -0.5f * height,  0.5f * depth,	0.0f, -1.0f,  0.0f,		8.0f, 0.0f,
+	         0.5f * width, -0.5f * height,  0.5f * depth,	0.0f, -1.0f,  0.0f,		8.0f, 0.0f,
 	        -0.5f * width, -0.5f * height,  0.5f * depth,	0.0f, -1.0f,  0.0f,		0.0f, 0.0f,
-	        -0.5f * width, -0.5f * height, -0.5f * depth,	0.0f, -1.0f,  0.0f,		0.0f, 1.0f,
+	        -0.5f * width, -0.5f * height, -0.5f * depth,	0.0f, -1.0f,  0.0f,		0.0f, 8.0f,
 
-	        -0.5f * width,  0.5f * height, -0.5f * depth,	0.0f,  1.0f,  0.0f,		0.0f, 1.0f,
-	         0.5f * width,  0.5f * height, -0.5f * depth,	0.0f,  1.0f,  0.0f,		1.0f, 1.0f,
-	         0.5f * width,  0.5f * height,  0.5f * depth,	0.0f,  1.0f,  0.0f,		1.0f, 0.0f,
-	         0.5f * width,  0.5f * height,  0.5f * depth,	0.0f,  1.0f,  0.0f,		1.0f, 0.0f,
+	        -0.5f * width,  0.5f * height, -0.5f * depth,	0.0f,  1.0f,  0.0f,		0.0f, 8.0f,
+	         0.5f * width,  0.5f * height, -0.5f * depth,	0.0f,  1.0f,  0.0f,		8.0f, 8.0f,
+	         0.5f * width,  0.5f * height,  0.5f * depth,	0.0f,  1.0f,  0.0f,		8.0f, 0.0f,
+	         0.5f * width,  0.5f * height,  0.5f * depth,	0.0f,  1.0f,  0.0f,		8.0f, 0.0f,
 	        -0.5f * width,  0.5f * height,  0.5f * depth,	0.0f,  1.0f,  0.0f,		0.0f, 0.0f,
-	        -0.5f * width,  0.5f * height, -0.5f * depth,	0.0f,  1.0f,  0.0f,		0.0f, 1.0f
+	        -0.5f * width,  0.5f * height, -0.5f * depth,	0.0f,  1.0f,  0.0f,		0.0f, 8.0f
 	    };
 
 		vertices = new GLfloat[verticesNo * verticeCoordNo];
@@ -118,7 +118,7 @@ public:
 		// Set lights properties
 		glUniform3f(glGetUniformLocation(shader->Program, "light.ambient"),  0.2f, 0.2f, 0.2f);
 		glUniform3f(glGetUniformLocation(shader->Program, "light.diffuse"),  0.5f, 0.5f, 0.5f);
-		glUniform3f(glGetUniformLocation(shader->Program, "light.specular"), 0.5f, 0.5f, 0.5f);
+		glUniform3f(glGetUniformLocation(shader->Program, "light.specular"), 0.1f, 0.1f, 0.1f);
 		// Set material properties
 		glUniform3f(glGetUniformLocation(shader->Program, "material.specular"),  0.5f, 0.5f, 0.5f);
 		glUniform1f(glGetUniformLocation(shader->Program, "material.shininess"), 64.0f);

@@ -30,6 +30,37 @@ public:
 	}
 
 
+	void Draw(glm::vec3 &lightPos, glm::mat4 &model) {
+		shader->Use();
+		glUniform1i(glGetUniformLocation(shader->Program, "material.diffuse"), 0);
+		glUniform3f(glGetUniformLocation(shader->Program, "light.position"), lightPos.x, lightPos.y, lightPos.z);
+		glUniform3f(glGetUniformLocation(shader->Program, "viewPos"), camera->Position.x, camera->Position.y, camera->Position.z);
+		// Set lights properties
+		glUniform3f(glGetUniformLocation(shader->Program, "light.ambient"),  0.2f, 0.2f, 0.2f);
+		glUniform3f(glGetUniformLocation(shader->Program, "light.diffuse"),  0.5f, 0.5f, 0.5f);
+		glUniform3f(glGetUniformLocation(shader->Program, "light.specular"), 0.1f, 0.1f, 0.1f);
+		// Set material properties
+		glUniform3f(glGetUniformLocation(shader->Program, "material.specular"),  0.5f, 0.5f, 0.5f);
+		glUniform1f(glGetUniformLocation(shader->Program, "material.shininess"), 64.0f);
+
+
+		glm::mat4 view = camera->GetViewMatrix();
+		glm::mat4 projection = glm::perspective(camera->Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
+
+		glUniformMatrix4fv(glGetUniformLocation(shader->Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(shader->Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+		// Bind diffuse map
+		glBindTexture(GL_TEXTURE_2D, GetTexture());
+
+		// Draw the container (using container's vertex attributes)
+		glBindVertexArray(GetVAO());
+		glUniformMatrix4fv(glGetUniformLocation(shader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, GetVerticesNo());
+		glBindVertexArray(0);
+	}
+
+
 private:
 	void BindVertices() {
 		glGenVertexArrays(1, &VAO);
