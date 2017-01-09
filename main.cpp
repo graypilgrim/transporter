@@ -19,6 +19,7 @@
 #include "Shader.hpp"
 #include "Camera.hpp"
 #include "Box.hpp"
+#include "Lamp.hpp"
 #include "Skybox.hpp"
 #include "Trunk.hpp"
 #include "Gear.hpp"
@@ -89,9 +90,18 @@ int main()
 	Shader lampShader("shaders/lamp.vs", "shaders/lamp.frag");
 	Shader skyboxShader("shaders/skybox.vs", "shaders/skybox.frag");
 
-	Box box(1.0f, 1.0f, 1.0f);
-	Box lamp(0.5f, 0.5f, 0.5f);
+	Box platform(10.0f, 10.0f, 10.0f);
+	platform.SetTexture("textures/ground.png");
+	platform.SetShader(&lightingWithTexShader);
+	platform.SetCamera(&camera);
+
+	Lamp lamp(1.5f, 1.5f, 1.5f);
+	lamp.SetCamera(&camera);
+	lamp.SetShader(&lampShader);
+
 	Skybox skybox;
+	skybox.SetCamera(&camera);
+	skybox.SetShader(&skyboxShader);
 
 	Trunk trunk(30);
 
@@ -136,67 +146,12 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, leftGear.GetVerticesNo());
 		glBindVertexArray(0);
 
+		platform.Draw(lightPos, model);
 
-		lightingWithTexShader.Use();
-		glUniform1i(glGetUniformLocation(lightingWithTexShader.Program, "material.diffuse"), 0);
-		glUniform3f(glGetUniformLocation(lightingWithTexShader.Program, "light.position"), lightPos.x, lightPos.y, lightPos.z);
-		glUniform3f(glGetUniformLocation(lightingWithTexShader.Program, "viewPos"), camera.Position.x, camera.Position.y, camera.Position.z);
-		// Set lights properties
-		glUniform3f(glGetUniformLocation(lightingWithTexShader.Program, "light.ambient"),  0.2f, 0.2f, 0.2f);
-		glUniform3f(glGetUniformLocation(lightingWithTexShader.Program, "light.diffuse"),  0.5f, 0.5f, 0.5f);
-		glUniform3f(glGetUniformLocation(lightingWithTexShader.Program, "light.specular"), 0.5f, 0.5f, 0.5f);
-		// Set material properties
-		glUniform3f(glGetUniformLocation(lightingWithTexShader.Program, "material.specular"),  0.5f, 0.5f, 0.5f);
-		glUniform1f(glGetUniformLocation(lightingWithTexShader.Program, "material.shininess"), 64.0f);
-
-		// Create camera transformations
-		view = camera.GetViewMatrix();
-		// Get the uniform locations
-		cameraData.modelLoc = glGetUniformLocation(lightingWithTexShader.Program, "model");
-		cameraData.viewLoc  = glGetUniformLocation(lightingWithTexShader.Program,  "view");
-		cameraData.projLoc  = glGetUniformLocation(lightingWithTexShader.Program,  "projection");
-		// Pass the matrices to the shader
-		glUniformMatrix4fv(cameraData.viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(cameraData.projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-		// Bind diffuse map
-		glBindTexture(GL_TEXTURE_2D, trunk.GetTexture());
-
-		// Draw the container (using container's vertex attributes)
-		glBindVertexArray(trunk.GetVAO());
-		glUniformMatrix4fv(cameraData.modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, trunk.GetVerticesNo());
-		glBindVertexArray(0);
-
-		// Also draw the lamp object, again binding the appropriate shader
-		lampShader.Use();
-		// Get location objects for the matrices on the lamp shader (these could be different on a different shader)
-		cameraData.modelLoc = glGetUniformLocation(lampShader.Program, "model");
-		cameraData.viewLoc  = glGetUniformLocation(lampShader.Program, "view");
-		cameraData.projLoc  = glGetUniformLocation(lampShader.Program, "projection");
-		// Set matrices
-		glUniformMatrix4fv(cameraData.viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(cameraData.projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 		model = glm::mat4();
-		model = glm::translate(model, lightPos);
-		model = glm::scale(model, glm::vec3(0.1f)); // Make it a smaller cube
-		glUniformMatrix4fv(cameraData.modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-		// Draw the light object (using light's vertex attributes)
-		glBindVertexArray(lamp.GetVAO());
-		glDrawArrays(GL_TRIANGLES, 0, lamp.GetVerticesNo());
-		glBindVertexArray(0);
+		lamp.Draw(lightPos, model);
 
-		glDepthFunc(GL_LEQUAL);  // Change depth function so depth test passes when values are equal to depth buffer's content
-		skyboxShader.Use();
-		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));	// Remove any translation component of the view matrix
-		glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(skyboxShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-
-		glBindVertexArray(skybox.GetVAO());
-		glBindTexture(GL_TEXTURE_CUBE_MAP, skybox.GetTexture());
-		glDrawArrays(GL_TRIANGLES, 0, skybox.GetVerticesNo());
-		glBindVertexArray(0);
-		glDepthFunc(GL_LESS); // Set depth function back to default
+		skybox.Draw();
 
 		glfwSwapBuffers(window);
 	}

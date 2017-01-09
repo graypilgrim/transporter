@@ -69,6 +69,21 @@ public:
 	    LoadCubemap();
 	}
 
+	void Draw() {
+		glDepthFunc(GL_LEQUAL);
+		shader->Use();
+		glm::mat4 view = glm::mat4(glm::mat3(camera->GetViewMatrix()));
+		glm::mat4 projection = glm::perspective(camera->Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
+		glUniformMatrix4fv(glGetUniformLocation(shader->Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(shader->Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+		glBindVertexArray(GetVAO());
+		glBindTexture(GL_TEXTURE_CUBE_MAP, GetTexture());
+		glDrawArrays(GL_TRIANGLES, 0, GetVerticesNo());
+		glBindVertexArray(0);
+		glDepthFunc(GL_LESS); // Set depth function back to default
+	}
+
 private:
 	void LoadCubemap()
 	{

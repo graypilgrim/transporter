@@ -10,6 +10,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Camera.hpp"
+#include "Shader.hpp"
+
 class Object
 {
 public:
@@ -41,6 +44,14 @@ public:
 		return texture;
 	}
 
+	void SetCamera(Camera *c) {
+		camera = c;
+	}
+
+	void SetShader(Shader *s) {
+		shader = s;
+	}
+
 protected:
 	void BindVertices() {
 		glGenVertexArrays(1, &VAO);
@@ -70,6 +81,9 @@ protected:
 	GLuint texture;
 
 	GLfloat *vertices;
+
+	Camera *camera;
+	Shader *shader;
 };
 
 #endif
