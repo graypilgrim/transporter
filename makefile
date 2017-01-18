@@ -4,7 +4,15 @@ LINKFLAGS = --std=c++11 -lGL -lGLU -lX11 -lXxf86vm -lglfw -lGLEW -lSOIL
 BINARY = main.bin
 
 SOURCES = \
-	main.cpp \
+	./src/main.cpp \
+	./src/Shader.cpp \
+	./src/Camera.cpp \
+	./src/Object.cpp \
+	./src/Box.cpp \
+	./src/Skybox.cpp \
+	./src/Trunk.cpp \
+	./src/Gear.cpp \
+	./src/Lamp.cpp \
 
 OBJECTS=$(SOURCES:.cpp=.o)
 
