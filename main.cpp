@@ -24,7 +24,7 @@
 #include "Trunk.hpp"
 #include "Gear.hpp"
 
-#define GEAR_TEETH_NO 3
+#define GEAR_TEETH_NO 17
 #define ANIMATION_SPEED 1.0f
 
 // Function prototypes
@@ -145,7 +145,7 @@ int main()
 
 		glm::mat4 leftGearModel = glm::mat4();
 		glm::mat4 rightGearModel = glm::mat4();
-
+		
 		leftGearModel = glm::translate(leftGearModel, glm::vec3(-0.4f, 0.4f, 0.0f));
 		rightGearModel = glm::translate(rightGearModel, glm::vec3(0.4f, 0.4f, 0.0f));
 

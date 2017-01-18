@@ -41,21 +41,21 @@ public:
         lightColor.z = 1.3f;
         glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f); // Decrease the influence
         glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // Low influence
-        glUniform3f(glGetUniformLocation(shader->Program, "light.ambient"),  ambientColor.x, ambientColor.y, ambientColor.z);
-        glUniform3f(glGetUniformLocation(shader->Program, "light.diffuse"),  diffuseColor.x, diffuseColor.y, diffuseColor.z);
+        glUniform3f(glGetUniformLocation(shader->Program, "light.ambient"), ambientColor.x, ambientColor.y, ambientColor.z);
+        glUniform3f(glGetUniformLocation(shader->Program, "light.diffuse"), diffuseColor.x, diffuseColor.y, diffuseColor.z);
         glUniform3f(glGetUniformLocation(shader->Program, "light.specular"), 1.0f, 1.0f, 1.0f);
         // Set material properties
-        glUniform3f(glGetUniformLocation(shader->Program, "material.ambient"),   1.0f, 0.5f, 0.31f);
-        glUniform3f(glGetUniformLocation(shader->Program, "material.diffuse"),   1.0f, 0.5f, 0.31f);
-        glUniform3f(glGetUniformLocation(shader->Program, "material.specular"),  0.5f, 0.5f, 0.5f); // Specular doesn't have full effect on this object's material
+        glUniform3f(glGetUniformLocation(shader->Program, "material.ambient"), 1.0f, 0.5f, 0.31f);
+        glUniform3f(glGetUniformLocation(shader->Program, "material.diffuse"), 1.0f, 0.5f, 0.31f);
+        glUniform3f(glGetUniformLocation(shader->Program, "material.specular"), 0.5f, 0.5f, 0.5f); // Specular doesn't have full effect on this object's material
         glUniform1f(glGetUniformLocation(shader->Program, "material.shininess"), 32.0f);
 
         // Create camera transformations
         glm::mat4 view = camera->GetViewMatrix();
         glm::mat4 projection = glm::perspective(camera->Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
         // Pass the matrices to the shader
-        glUniformMatrix4fv(glGetUniformLocation(shader->Program,  "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(glGetUniformLocation(shader->Program,  "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(glGetUniformLocation(shader->Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(shader->Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
         // Draw the container (using container's vertex attributes)
         glBindVertexArray(GetVAO());
@@ -145,7 +145,7 @@ private:
 
 			GLfloat normal[3];
 			normal[0] = U[1] * V[2] - U[2] * V[1];
-			normal[1] = U[2] * V[0] - U[0] * U[2];
+			normal[1] = U[2] * V[0] - U[0] * V[2];
 			normal[2] = U[0] * V[1] - U[1] * V[0];
 
 			vertices[index + 3] = vertices[index + 9] = vertices[index + 15] = normal[0];
@@ -197,7 +197,7 @@ private:
 			V[2] = vertices[index + 50] - vertices[index + 38];
 
 			normal[0] = U[1] * V[2] - U[2] * V[1];
-			normal[1] = U[2] * V[0] - U[0] * U[2];
+			normal[1] = U[2] * V[0] - U[0] * V[2];
 			normal[2] = U[0] * V[1] - U[1] * V[0];
 
 			vertices[index + 39] = vertices[index + 45] = vertices[index + 51] = normal[0];
