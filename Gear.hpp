@@ -30,24 +30,38 @@ public:
 		delete[] vertices;
 	}
 
-	void Draw(glm::vec3 &lightPos,glm::mat4 &model) {
+	void Draw(glm::vec3 &lightPos, glm::mat4 &model) {
 		shader->Use();
-		glUniform3f(glGetUniformLocation(shader->Program, "objectColor"), 0.23f, 0.63f, 0.9f);
-		glUniform3f(glGetUniformLocation(shader->Program, "lightColor"),  1.0f, 1.0f, 1.0f);
-		glUniform3f(glGetUniformLocation(shader->Program, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-		glUniform3f(glGetUniformLocation(shader->Program, "viewPos"), camera->Position.x, camera->Position.y, camera->Position.z);
+        glUniform3f(glGetUniformLocation(shader->Program, "light.position"), lightPos.x, lightPos.y, lightPos.z);
+        glUniform3f(glGetUniformLocation(shader->Program, "viewPos"), camera->Position.x, camera->Position.y, camera->Position.z);
+        // Set lights properties
+        glm::vec3 lightColor;
+        lightColor.x = 2.0f;
+        lightColor.y = 0.7f;
+        lightColor.z = 1.3f;
+        glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f); // Decrease the influence
+        glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // Low influence
+        glUniform3f(glGetUniformLocation(shader->Program, "light.ambient"),  ambientColor.x, ambientColor.y, ambientColor.z);
+        glUniform3f(glGetUniformLocation(shader->Program, "light.diffuse"),  diffuseColor.x, diffuseColor.y, diffuseColor.z);
+        glUniform3f(glGetUniformLocation(shader->Program, "light.specular"), 1.0f, 1.0f, 1.0f);
+        // Set material properties
+        glUniform3f(glGetUniformLocation(shader->Program, "material.ambient"),   1.0f, 0.5f, 0.31f);
+        glUniform3f(glGetUniformLocation(shader->Program, "material.diffuse"),   1.0f, 0.5f, 0.31f);
+        glUniform3f(glGetUniformLocation(shader->Program, "material.specular"),  0.5f, 0.5f, 0.5f); // Specular doesn't have full effect on this object's material
+        glUniform1f(glGetUniformLocation(shader->Program, "material.shininess"), 32.0f);
 
-		glm::mat4 view = camera->GetViewMatrix();
-		glm::mat4 projection = glm::perspective(camera->Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
-		// Pass the matrices to the shader
-		glUniformMatrix4fv(glGetUniformLocation(shader->Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-		glUniformMatrix4fv(glGetUniformLocation(shader->Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        // Create camera transformations
+        glm::mat4 view = camera->GetViewMatrix();
+        glm::mat4 projection = glm::perspective(camera->Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
+        // Pass the matrices to the shader
+        glUniformMatrix4fv(glGetUniformLocation(shader->Program,  "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(shader->Program,  "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
-		// Draw the container (using container's vertex attributes)
-		glBindVertexArray(GetVAO());
-		glUniformMatrix4fv(glGetUniformLocation(shader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, GetVerticesNo());
-		glBindVertexArray(0);
+        // Draw the container (using container's vertex attributes)
+        glBindVertexArray(GetVAO());
+        glUniformMatrix4fv(glGetUniformLocation(shader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+        glDrawArrays(GL_TRIANGLES, 0, GetVerticesNo());
+        glBindVertexArray(0);
 	}
 
 private:
@@ -107,7 +121,7 @@ private:
 
 	void CreateSides(size_t &index, GLfloat zValue) {
 		for (size_t i = 0; i < segmentsNo; ++i) {
-			//first triangle
+			//first side
 			vertices[index] = radius * cos(i * circleQuantum);
 			vertices[index + 1] = radius * sin(i * circleQuantum);
 			vertices[index + 2] = 0.0f;
@@ -160,7 +174,7 @@ private:
 			vertices[index + 34] = normal[1];
 			vertices[index + 35] = normal[2];
 
-			//second triangle
+			//second side
 
 			vertices[index + 36] = radius * cos((i + 1) * circleQuantum);
 			vertices[index + 37] = radius * sin((i + 1) * circleQuantum);
