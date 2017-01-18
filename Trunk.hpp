@@ -17,7 +17,7 @@ public:
 
 		memset(vertices, 0, GetArraySize());
 		size_t index = 0;
-		GLfloat zValue = 1.0f;
+		GLfloat zValue = 2.0f;
 		CreateCircles(index, zValue);
 		CreateSides(index, zValue);
 

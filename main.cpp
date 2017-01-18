@@ -24,6 +24,9 @@
 #include "Trunk.hpp"
 #include "Gear.hpp"
 
+#define GEAR_TEETH_NO 17
+#define ANIMATION_SPEED 1.0f
+
 // Function prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -104,14 +107,22 @@ int main()
 	Trunk trunk(30);
 	trunk.SetCamera(&camera);
 	trunk.SetShader(&lightingWithTexShader);
+	GLfloat displacement = 0.0f;
+	GLfloat maxDisplacement = 0.5f;
+	GLfloat displacementFactor = 0.01f;
+	bool positiveDirection = true;
 
-	Gear leftGear(17);
+	Gear leftGear(GEAR_TEETH_NO);
 	leftGear.SetCamera(&camera);
 	leftGear.SetShader(&lightingShader);
+	GLfloat leftGearRotationAngle = 0.0f;
 
-	Gear rightGear(17);
+	Gear rightGear(GEAR_TEETH_NO);
 	rightGear.SetCamera(&camera);
 	rightGear.SetShader(&lightingShader);
+	GLfloat rightGearRotationAngle = 0.0f;
+
+	GLfloat animationDirection = 1.0f;
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -141,11 +152,31 @@ int main()
 		leftGearModel = glm::rotate(leftGearModel, -3.14f/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		rightGearModel = glm::rotate(rightGearModel, -3.14f/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
+		animationDirection = positiveDirection ? 1.0f : -1.0f;
+
+		leftGearRotationAngle += deltaTime * -animationDirection * ANIMATION_SPEED;
+		leftGearModel = glm::rotate(leftGearModel, leftGearRotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
+
+		rightGearRotationAngle += deltaTime * animationDirection * ANIMATION_SPEED;
+		rightGearModel = glm::rotate(rightGearModel, rightGearRotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
+
 		leftGear.Draw(lightPos, leftGearModel);
 		rightGear.Draw(lightPos, rightGearModel);
 
 		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(0.0f, 0.5f, 0.0f));
+		if (positiveDirection)
+			displacement += displacementFactor * ANIMATION_SPEED;
+		else
+			displacement -= displacementFactor * ANIMATION_SPEED;
+
+		if (displacement > maxDisplacement)
+			positiveDirection = false;
+
+		if (displacement < -maxDisplacement)
+			positiveDirection = true;
+
+		model = glm::translate(model, glm::vec3(0.0f, 0.5f, displacement - 0.8f));
+
 		trunk.Draw(lightPos, model);
 
 		model = glm::mat4();
