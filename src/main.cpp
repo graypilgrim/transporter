@@ -25,7 +25,7 @@
 #include "../headers/Gear.hpp"
 
 #define GEAR_TEETH_NO 17
-#define ANIMATION_SPEED 1.0f
+#define ANIMATION_SPEED 2.0f
 
 // Function prototypes
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -77,8 +77,8 @@ int main()
 	// OpenGL options
 	glEnable(GL_DEPTH_TEST);
 
-	glm::vec3 lightPos(-5.2f, 5.0f, -5.0f);
-
+	glm::vec3 lightPos(-10.0f, 5.0f, -10.0f);
+	glm::vec3 lightColor(2.0f, 2.0f, 2.0f);
 
 	// Build and compile our shader program
 	Shader lightingWithTexShader("shaders/lightingWithTex.vs", "shaders/lightingWithTex.frag");
@@ -91,7 +91,7 @@ int main()
 	island.SetShader(&lightingWithTexShader);
 	island.SetCamera(&camera);
 
-	Box platform(3.0f, 0.4f, 5.0f);
+	Box platform(2.5f, 0.4f, 4.0f);
 	platform.SetTexture("textures/stone.png");
 	platform.SetShader(&lightingWithTexShader);
 	platform.SetCamera(&camera);
@@ -108,19 +108,27 @@ int main()
 	trunk.SetCamera(&camera);
 	trunk.SetShader(&lightingWithTexShader);
 	GLfloat displacement = 0.0f;
-	GLfloat maxDisplacement = 0.5f;
+	GLfloat maxDisplacement = 0.8f;
 	GLfloat displacementFactor = 0.01f;
 	bool positiveDirection = true;
 
-	Gear leftGear(GEAR_TEETH_NO);
-	leftGear.SetCamera(&camera);
-	leftGear.SetShader(&lightingShader);
+	Gear frontLeftGear(GEAR_TEETH_NO);
+	frontLeftGear.SetCamera(&camera);
+	frontLeftGear.SetShader(&lightingShader);
 	GLfloat leftGearRotationAngle = 0.0f;
 
-	Gear rightGear(GEAR_TEETH_NO);
-	rightGear.SetCamera(&camera);
-	rightGear.SetShader(&lightingShader);
+	Gear frontRightGear(GEAR_TEETH_NO);
+	frontRightGear.SetCamera(&camera);
+	frontRightGear.SetShader(&lightingShader);
 	GLfloat rightGearRotationAngle = 0.0f;
+
+	Gear backLeftGear(GEAR_TEETH_NO);
+	backLeftGear.SetCamera(&camera);
+	backLeftGear.SetShader(&lightingShader);
+
+	Gear backRightGear(GEAR_TEETH_NO);
+	backRightGear.SetCamera(&camera);
+	backRightGear.SetShader(&lightingShader);
 
 	GLfloat animationDirection = 1.0f;
 
@@ -138,30 +146,40 @@ int main()
 
 		glm::mat4 model;
 
-		island.Draw(lightPos, model);
+		island.Draw(lightPos, model, lightColor);
 
 		model = glm::translate(model, glm::vec3(0.0f, 0.2f, 0.0f));
-		platform.Draw(lightPos, model);
+		platform.Draw(lightPos, model, lightColor);
 
-		glm::mat4 leftGearModel = glm::mat4();
-		glm::mat4 rightGearModel = glm::mat4();
+		glm::mat4 frontLeftGearModel = glm::mat4();
+		glm::mat4 frontRightGearModel = glm::mat4();
+		glm::mat4 backLeftGearModel = glm::mat4();
+		glm::mat4 backRightGearModel = glm::mat4();
 
-		leftGearModel = glm::translate(leftGearModel, glm::vec3(-0.4f, 0.4f, 0.0f));
-		rightGearModel = glm::translate(rightGearModel, glm::vec3(0.4f, 0.4f, 0.0f));
+		frontLeftGearModel = glm::translate(frontLeftGearModel, glm::vec3(-0.395f, 0.4f, 0.4f));
+		frontRightGearModel = glm::translate(frontRightGearModel, glm::vec3(0.395f, 0.4f, 0.4f));
+		backLeftGearModel = glm::translate(backLeftGearModel, glm::vec3(-0.395f, 0.4f, -0.4f));
+		backRightGearModel = glm::translate(backRightGearModel, glm::vec3(0.395f, 0.4f, -0.4f));
 
-		leftGearModel = glm::rotate(leftGearModel, -3.14f/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		rightGearModel = glm::rotate(rightGearModel, -3.14f/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		frontLeftGearModel = glm::rotate(frontLeftGearModel, (float)-M_PI/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		frontRightGearModel = glm::rotate(frontRightGearModel, (float)-M_PI/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		backLeftGearModel = glm::rotate(backLeftGearModel, (float)-M_PI/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		backRightGearModel = glm::rotate(backRightGearModel, (float)-M_PI/2.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
 		animationDirection = positiveDirection ? 1.0f : -1.0f;
 
 		leftGearRotationAngle += deltaTime * -animationDirection * ANIMATION_SPEED;
-		leftGearModel = glm::rotate(leftGearModel, leftGearRotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
+		frontLeftGearModel = glm::rotate(frontLeftGearModel, leftGearRotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
+		backLeftGearModel = glm::rotate(backLeftGearModel, leftGearRotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
 
 		rightGearRotationAngle += deltaTime * animationDirection * ANIMATION_SPEED;
-		rightGearModel = glm::rotate(rightGearModel, rightGearRotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
+		frontRightGearModel = glm::rotate(frontRightGearModel, rightGearRotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
+		backRightGearModel = glm::rotate(backRightGearModel, rightGearRotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
 
-		leftGear.Draw(lightPos, leftGearModel);
-		rightGear.Draw(lightPos, rightGearModel);
+		frontLeftGear.Draw(lightPos, frontLeftGearModel, lightColor);
+		frontRightGear.Draw(lightPos, frontRightGearModel, lightColor);
+		backLeftGear.Draw(lightPos, backLeftGearModel, lightColor);
+		backRightGear.Draw(lightPos, backRightGearModel, lightColor);
 
 		model = glm::mat4();
 		if (positiveDirection)
@@ -175,12 +193,12 @@ int main()
 		if (displacement < -maxDisplacement)
 			positiveDirection = true;
 
-		model = glm::translate(model, glm::vec3(0.0f, 0.5f, displacement - 0.8f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.5f, displacement - 1.0f));
 
-		trunk.Draw(lightPos, model);
+		trunk.Draw(lightPos, model, lightColor);
 
 		model = glm::mat4();
-		lamp.Draw(lightPos, model);
+		// lamp.Draw(lightPos, model);
 
 		skybox.Draw();
 

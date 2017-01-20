@@ -17,25 +17,21 @@ Gear::~Gear() {
 	delete[] vertices;
 }
 
-void Gear::Draw(glm::vec3 &lightPos, glm::mat4 &model) {
+void Gear::Draw(glm::vec3 &lightPos, glm::mat4 &model, glm::vec3 lightColor) {
 	shader->Use();
 	glUniform3f(glGetUniformLocation(shader->Program, "light.position"), lightPos.x, lightPos.y, lightPos.z);
 	glUniform3f(glGetUniformLocation(shader->Program, "viewPos"), camera->Position.x, camera->Position.y, camera->Position.z);
 
-	glm::vec3 lightColor;
-	lightColor.x = 2.0f;
-	lightColor.y = 0.7f;
-	lightColor.z = 1.3f;
-	glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f); // Decrease the influence
-	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // Low influence
+	glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
 	glUniform3f(glGetUniformLocation(shader->Program, "light.ambient"), ambientColor.x, ambientColor.y, ambientColor.z);
 	glUniform3f(glGetUniformLocation(shader->Program, "light.diffuse"), diffuseColor.x, diffuseColor.y, diffuseColor.z);
 	glUniform3f(glGetUniformLocation(shader->Program, "light.specular"), 1.0f, 1.0f, 1.0f);
 
-	glUniform3f(glGetUniformLocation(shader->Program, "material.ambient"), 1.0f, 0.5f, 0.31f);
-	glUniform3f(glGetUniformLocation(shader->Program, "material.diffuse"), 1.0f, 0.5f, 0.31f);
-	glUniform3f(glGetUniformLocation(shader->Program, "material.specular"), 0.5f, 0.5f, 0.5f); // Specular doesn't have full effect on this object's material
-	glUniform1f(glGetUniformLocation(shader->Program, "material.shininess"), 32.0f);
+	glUniform3f(glGetUniformLocation(shader->Program, "material.ambient"), 0.4f, 0.4f, 0.4f);
+	glUniform3f(glGetUniformLocation(shader->Program, "material.diffuse"), 0.4f, 0.4f, 0.4f);
+	glUniform3f(glGetUniformLocation(shader->Program, "material.specular"), 0.774597f, 0.774597f, 0.5774597);
+	glUniform1f(glGetUniformLocation(shader->Program, "material.shininess"), 32.6f);
 
 	glm::mat4 view = camera->GetViewMatrix();
 	glm::mat4 projection = glm::perspective(camera->Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
@@ -175,30 +171,30 @@ void Gear::CreateSides(size_t &index, GLfloat zValue) {
 		normal[1] = U[2] * V[0] - U[0] * V[2];
 		normal[2] = U[0] * V[1] - U[1] * V[0];
 
-		vertices[index + 39] = vertices[index + 45] = vertices[index + 51] = normal[0];
-		vertices[index + 40] = vertices[index + 46] = vertices[index + 52] = normal[1];
-		vertices[index + 41] = vertices[index + 47] = vertices[index + 53] = normal[2];
+		vertices[index + 39] = vertices[index + 45] = vertices[index + 51] = -normal[0];
+		vertices[index + 40] = vertices[index + 46] = vertices[index + 52] = -normal[1];
+		vertices[index + 41] = vertices[index + 47] = vertices[index + 53] = -normal[2];
 
 		vertices[index + 54] = radius * cos((i + 1) * circleQuantum);
 		vertices[index + 55] = radius * sin((i + 1) * circleQuantum);
 		vertices[index + 56] = zValue;
-		vertices[index + 57] = normal[0];
-		vertices[index + 58] = normal[1];
-		vertices[index + 59] = normal[2];
+		vertices[index + 57] = -normal[0];
+		vertices[index + 58] = -normal[1];
+		vertices[index + 59] = -normal[2];
 
 		vertices[index + 60] = 1.5f * radius * cos(i * circleQuantum + circleQuantum/2);
 		vertices[index + 61] = 1.5f * radius * sin(i * circleQuantum + circleQuantum/2);
 		vertices[index + 62] = zValue;
-		vertices[index + 63] = normal[0];
-		vertices[index + 64] = normal[1];
-		vertices[index + 65] = normal[2];
+		vertices[index + 63] = -normal[0];
+		vertices[index + 64] = -normal[1];
+		vertices[index + 65] = -normal[2];
 
 		vertices[index + 66] = 1.5f * radius * cos(i * circleQuantum + circleQuantum/2);
 		vertices[index + 67] = 1.5f * radius * sin(i * circleQuantum + circleQuantum/2);
 		vertices[index + 68] = 0.0f;
-		vertices[index + 69] = normal[0];
-		vertices[index + 70] = normal[1];
-		vertices[index + 71] = normal[2];
+		vertices[index + 69] = -normal[0];
+		vertices[index + 70] = -normal[1];
+		vertices[index + 71] = -normal[2];
 
 		index += 72;
 	}

@@ -12,7 +12,7 @@ public:
 	~Box();
 
 	void SetTexture(std::string texPath);
-	void Draw(glm::vec3 &lightPos, glm::mat4 &model);
+	void Draw(glm::vec3 &lightPos, glm::mat4 &model, glm::vec3 lightColor);
 
 private:
 	void BindVertices();

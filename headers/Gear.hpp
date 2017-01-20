@@ -9,7 +9,7 @@ public:
 	Gear(size_t segments);
 	~Gear();
 
-	void Draw(glm::vec3 &lightPos, glm::mat4 &model);
+	void Draw(glm::vec3 &lightPos, glm::mat4 &model, glm::vec3 lightColor);
 
 private:
 	void CreateCircles(size_t &index, GLfloat height);

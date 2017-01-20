@@ -75,14 +75,16 @@ void Box::SetTexture(std::string texPath) {
     glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void Box::Draw(glm::vec3 &lightPos, glm::mat4 &model) {
+void Box::Draw(glm::vec3 &lightPos, glm::mat4 &model, glm::vec3 lightColor) {
 	shader->Use();
 	glUniform1i(glGetUniformLocation(shader->Program, "material.diffuse"), 0);
 	glUniform3f(glGetUniformLocation(shader->Program, "light.position"), lightPos.x, lightPos.y, lightPos.z);
 	glUniform3f(glGetUniformLocation(shader->Program, "viewPos"), camera->Position.x, camera->Position.y, camera->Position.z);
 
-	glUniform3f(glGetUniformLocation(shader->Program, "light.ambient"),  0.2f, 0.2f, 0.2f);
-	glUniform3f(glGetUniformLocation(shader->Program, "light.diffuse"),  0.5f, 0.5f, 0.5f);
+	glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f);
+	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f);
+	glUniform3f(glGetUniformLocation(shader->Program, "light.ambient"), ambientColor.x, ambientColor.y, ambientColor.z);
+	glUniform3f(glGetUniformLocation(shader->Program, "light.diffuse"), diffuseColor.x, diffuseColor.y, diffuseColor.z);
 	glUniform3f(glGetUniformLocation(shader->Program, "light.specular"), 0.1f, 0.1f, 0.1f);
 
 	glUniform3f(glGetUniformLocation(shader->Program, "material.specular"),  0.5f, 0.5f, 0.5f);

@@ -4,8 +4,8 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-const GLuint WIDTH = 1024;
-const GLuint HEIGHT = 768;
+const GLuint WIDTH = 1920;
+const GLuint HEIGHT = 1080;
 
 enum Camera_Movement {
 	FORWARD,
@@ -16,8 +16,8 @@ enum Camera_Movement {
 
 const GLfloat YAW = -90.0f;
 const GLfloat PITCH = 0.0f;
-const GLfloat SPEED = 3.0f;
-const GLfloat SENSITIVTY = 0.25f;
+const GLfloat SPEED = 1.0f;
+const GLfloat SENSITIVTY = 0.1f;
 const GLfloat ZOOM = 45.0f;
 
 class Camera

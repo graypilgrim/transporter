@@ -9,7 +9,7 @@ public:
 	Trunk(size_t segments);
 	~Trunk();
 
-	void Draw(glm::vec3 &lightPos, glm::mat4 &model);
+	void Draw(glm::vec3 &lightPos, glm::mat4 &model, glm::vec3 lightColor);
 
 private:
 	void BindVertices();
