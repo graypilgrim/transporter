@@ -111,6 +111,9 @@ int main()
 	GLfloat maxDisplacement = 0.8f;
 	GLfloat displacementFactor = 0.01f;
 	bool positiveDirection = true;
+	bool stopMoves = false;
+	GLfloat stopTime = 0.0f;
+	GLfloat waitingTime = 0.08f;
 
 	Gear frontLeftGear(GEAR_TEETH_NO);
 	frontLeftGear.SetCamera(&camera);
@@ -168,11 +171,12 @@ int main()
 
 		animationDirection = positiveDirection ? 1.0f : -1.0f;
 
-		leftGearRotationAngle += deltaTime * -animationDirection * ANIMATION_SPEED;
+
+		leftGearRotationAngle += stopMoves ? 0.0f : deltaTime * -animationDirection * ANIMATION_SPEED;
 		frontLeftGearModel = glm::rotate(frontLeftGearModel, leftGearRotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
 		backLeftGearModel = glm::rotate(backLeftGearModel, leftGearRotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
 
-		rightGearRotationAngle += deltaTime * animationDirection * ANIMATION_SPEED;
+		rightGearRotationAngle += stopMoves ? 0.0f : deltaTime * animationDirection * ANIMATION_SPEED;
 		frontRightGearModel = glm::rotate(frontRightGearModel, rightGearRotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
 		backRightGearModel = glm::rotate(backRightGearModel, rightGearRotationAngle, glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -183,15 +187,24 @@ int main()
 
 		model = glm::mat4();
 		if (positiveDirection)
-			displacement += displacementFactor * ANIMATION_SPEED;
+			displacement += stopMoves ? 0.0f : displacementFactor * ANIMATION_SPEED;
 		else
-			displacement -= displacementFactor * ANIMATION_SPEED;
+			displacement -= stopMoves ? 0.0f : displacementFactor * ANIMATION_SPEED;
 
-		if (displacement > maxDisplacement)
+		if (!stopMoves && displacement > maxDisplacement) {
 			positiveDirection = false;
+			stopMoves = true;
+			stopTime = currentFrame;
+		}
 
-		if (displacement < -maxDisplacement)
+		if (!stopMoves && displacement < -maxDisplacement) {
 			positiveDirection = true;
+			stopMoves = true;
+			stopTime = currentFrame;
+		}
+
+		if (currentFrame - stopTime > waitingTime)
+			stopMoves = false;
 
 		model = glm::translate(model, glm::vec3(0.0f, 0.5f, displacement - 1.0f));
 

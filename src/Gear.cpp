@@ -31,7 +31,7 @@ void Gear::Draw(glm::vec3 &lightPos, glm::mat4 &model, glm::vec3 lightColor) {
 	glUniform3f(glGetUniformLocation(shader->Program, "material.ambient"), 0.4f, 0.4f, 0.4f);
 	glUniform3f(glGetUniformLocation(shader->Program, "material.diffuse"), 0.4f, 0.4f, 0.4f);
 	glUniform3f(glGetUniformLocation(shader->Program, "material.specular"), 0.774597f, 0.774597f, 0.5774597);
-	glUniform1f(glGetUniformLocation(shader->Program, "material.shininess"), 32.6f);
+	glUniform1f(glGetUniformLocation(shader->Program, "material.shininess"), 76.6f);
 
 	glm::mat4 view = camera->GetViewMatrix();
 	glm::mat4 projection = glm::perspective(camera->Zoom, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
